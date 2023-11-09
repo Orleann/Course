@@ -1,34 +1,30 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
-const Header = (props) => {
-  return <h1>{props.course.name}</h1>;
+// Header component
+const Header = ({ course }) => {
+  return (
+    <h1>{course}</h1>
+  );
 };
 
-const Content = (props) => {
+// Content component
+const Content = ({ parts }) => {
   return (
     <div>
-      {props.parts.map((part, index) => (
-        <Part key={index} part={part} />
+      {parts.map((part, index) => (
+        <Part key={index} part={part.name} exercises={part.exercises} />
       ))}
     </div>
   );
 };
 
-const Part = (props) => {
-  return (
-    <p>
-      {props.part.name} - {props.part.exercises} exercises
-    </p>
-  );
-};
+// Total component
+const Total = ({ parts }) => {
+  const totalExercises = parts.reduce((total, part) => total + part.exercises, 0);
 
-const Total = (props) => {
-  const totalExercises = props.parts.reduce(
-    (total, part) => total + part.exercises,
-    0
+  return (
+    <p><strong>Total exercises: {totalExercises}</strong></p>
   );
-  return <p>Total number of exercises: {totalExercises}</p>;
 };
 
 const App = () => {
@@ -50,13 +46,26 @@ const App = () => {
     ],
   };
 
+  const totalExercises = course.parts.reduce((sum, part) => sum + part.exercises, 0);
+
   return (
     <div>
-      <Header course={course} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
+      <h1>{course.name}</h1>
+      {course.parts.map((part, index) => (
+        <Part key={index} part={part} />
+      ))}
+      <p>Total exercises: {totalExercises}</p>
     </div>
   );
 };
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+const Part = ({ part }) => {
+  const { name, exercises } = part;
+  return (
+    <p>
+      {name} - {exercises} exercises
+    </p>
+  );
+};
+
+export default App;

@@ -1,56 +1,62 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
-// Header component
-const Header = ({ course }) => {
-  return (
-    <h1>{course}</h1>
-  );
+const Header = (props) => {
+  return <h1>{props.course.name}</h1>;
 };
 
-// Part component
-const Part = ({ part, exercises }) => {
-  return (
-    <p>
-      {part} {exercises}
-    </p>
-  );
-};
-
-// Content component
-const Content = ({ parts }) => {
+const Content = (props) => {
   return (
     <div>
-      {parts.map((part, index) => (
-        <Part key={index} part={part.name} exercises={part.exercises} />
+      {props.parts.map((part, index) => (
+        <Part key={index} part={part} />
       ))}
     </div>
   );
 };
 
-// Total component
-const Total = ({ parts }) => {
-  const totalExercises = parts.reduce((total, part) => total + part.exercises, 0);
-
+const Part = (props) => {
   return (
-    <p><strong>Total exercises: {totalExercises}</strong></p>
+    <p>
+      {props.part.name} - {props.part.exercises} exercises
+    </p>
   );
 };
 
+const Total = (props) => {
+  const totalExercises = props.parts.reduce(
+    (total, part) => total + part.exercises,
+    0
+  );
+  return <p>Total number of exercises: {totalExercises}</p>;
+};
+
 const App = () => {
-  const course = 'Half Stack application development';
-  const parts = [
-    { name: 'Fundamentals of React', exercises: 10 },
-    { name: 'Using props to pass data', exercises: 7 },
-    { name: 'State of a component', exercises: 14 },
-  ];
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10,
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7,
+      },
+      {
+        name: 'State of a component',
+        exercises: 14,
+      },
+    ],
+  };
 
   return (
     <div>
       <Header course={course} />
-      <Content parts={parts} />
-      <Total parts={parts} />
+      <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </div>
   );
 };
 
-export default App;
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);

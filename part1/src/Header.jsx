@@ -1,0 +1,7 @@
+const Header = ({course}) => {
+    return (
+      <h1>Half Stack application development</h1>
+    )
+  }
+
+export default Header

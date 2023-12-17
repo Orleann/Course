@@ -29,7 +29,7 @@ const Statistics = ({good, neutral, bad}) => {
 
 const Votes = {
     0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0   
-  }
+}
 
 const Anecdotes = [
     'If it hurts, do it more often.',
@@ -72,10 +72,13 @@ const App = () => {
   }
 
   const handleSelected = () => {
-    const randomIndex = Math.floor(Math.random() * Anecdotes.length);
-    setSelected(randomIndex);
+    const randomIndex = Math.floor(Math.random() * Anecdotes.length)
+    setSelected(randomIndex)
   }
   
+  const anecdoteWithMostVotes = Object.keys(votes).reduce((a, b) => votes[a] > votes[b] ? a : b)
+  const mostVotedAnecdote = Anecdotes[anecdoteWithMostVotes]
+
   return (
     <div>
       <h1>Give Feedback</h1>
@@ -85,11 +88,16 @@ const App = () => {
       <button onClick={handleSelected}>Random Anecdote</button>
 
       {hasFeedback && <Statistics good={good} neutral={neutral} bad={bad} /> || <p>No feedback given</p>}
+
+      <h1>Anecdote of the day</h1>
       {Anecdotes[selected]}
       <p>has {votes[selected]} votes</p>
       <p><button onClick={handleVotes}>vote</button></p>
+
+      <h1>Anecdote with most votes</h1>
+      <p>{mostVotedAnecdote}</p>
     </div>
-  );
-};
+  )
+}
 
 export default App;

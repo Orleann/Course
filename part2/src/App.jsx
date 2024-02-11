@@ -7,13 +7,12 @@ import personService from './personservices';
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Sebastian', number: '123-456-789', id: 1 },
-    { name: 'Random', number: '789-654-321', id: 2 },
+    {name: 'Sebastian', number: '123-456-789', id: 1},
+    {name: 'Random', number: '789-654-321', id: 2},
   ]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     axios.get('http://localhost:3001/persons')
@@ -39,32 +38,27 @@ const App = () => {
     setPersons([...persons, newPerson]);
     setNewName('');
     setNewNumber('');
-    showNotification(`Added ${newPerson.name}`);
   };
+
+  const filteredPersons = persons.filter(person =>
+    person.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleDelete = (id) => {
     const personToDelete = persons.find(person => person.id === id);
-
+  
     if (window.confirm(`Delete ${personToDelete.name}?`)) {
       const numericId = Number(id);
       axios.delete(`http://localhost:3001/persons/${numericId}`)
         .then(response => {
           console.log('Delete successful:', response.data);
           setPersons(prevPersons => prevPersons.filter(person => person.id !== numericId));
-          showNotification(`Deleted ${personToDelete.name}`);
         })
         .catch(error => {
           console.error('Error deleting person:', error);
         });
     }
-  };
-
-  const showNotification = (message) => {
-    setNotification(message);
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
-  };
+  };  
 
   return (
     <div>
@@ -84,9 +78,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={filteredPersons} handleDelete={handleDelete} />
-
-      {notification && <div style={{ background: 'lightgreen', padding: '10px', marginTop: '10px' }}>{notification}</div>}
+      <Persons persons={filteredPersons} handleDelete={handleDelete}/>
     </div>
   );
 };

@@ -48,16 +48,17 @@ const App = () => {
     const personToDelete = persons.find(person => person.id === id);
   
     if (window.confirm(`Delete ${personToDelete.name}?`)) {
-      axios.delete(`http://localhost:3001/persons/${id}`)
+      const numericId = Number(id);
+      axios.delete(`http://localhost:3001/persons/${numericId}`)
         .then(response => {
           console.log('Delete successful:', response.data);
-          setPersons(prevPersons => prevPersons.filter(person => person.id !== id));
+          setPersons(prevPersons => prevPersons.filter(person => person.id !== numericId));
         })
         .catch(error => {
           console.error('Error deleting person:', error);
         });
     }
-  };
+  };  
 
   return (
     <div>

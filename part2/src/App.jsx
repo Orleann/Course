@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Filter from './Filter';
 import PersonForm from './PersonForm';
 import Persons from './Persons';
+import services from './services';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,13 +11,9 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
+    services.getAll()
+      .then(data => setPersons(data))
+      .catch(error => console.error('Error fetching data:', error));
   }, []);
 
   const addPerson = (event) => {
@@ -31,15 +27,14 @@ const App = () => {
     }
 
     const newPerson = { name: newName, number: newNumber };
-    axios.post('http://localhost:3001/persons', newPerson)
-      .then(response => {
-        setPersons([...persons, response.data]);
+
+    services.create(newPerson)
+      .then(data => {
+        setPersons([...persons, data]);
         setNewName('');
         setNewNumber('');
       })
-      .catch(error => {
-        console.error('Error saving data:', error);
-      });
+      .catch(error => console.error('Error saving data:', error));
   };
 
   const filteredPersons = persons.filter(person =>
